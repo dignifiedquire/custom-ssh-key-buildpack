@@ -26,7 +26,6 @@ if [[ -f $ENV_DIR/CUSTOM_SSH_KEY && -f $ENV_DIR/CUSTOM_SSH_KEY_HOSTS ]]; then
   IFS=',' ;for element in `cat $ENV_DIR/CUSTOM_SSH_KEY_HOSTS`;
   do
     echo -e "Host *\n"\
-            "  IdentityFile ~/.ssh/custom_key\n"\
             "  IdentitiesOnly yes\n"\
             "  UserKnownHostsFile=/dev/null\n"\
             "  StrictHostKeyChecking no\n"\
