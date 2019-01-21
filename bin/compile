@@ -33,6 +33,9 @@ if [[ -f $ENV_DIR/CUSTOM_SSH_KEY && -f $ENV_DIR/CUSTOM_SSH_KEY_HOSTS ]]; then
             >> ~/.ssh/config
   done
 
+  eval `ssh-agent -s`
+  ssh-add ~/.ssh/custom_key
+
   echo "-----> Successfully added custom SSH key"
 
 fi
