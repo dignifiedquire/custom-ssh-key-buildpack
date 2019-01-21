@@ -3,6 +3,7 @@
 
 # Generates an SSH config file for connections if a config var exists.
 
+BUILD_DIR=$1
 ENV_DIR=$3
 
 if [[ -f $ENV_DIR/CUSTOM_SSH_KEY && -f $ENV_DIR/CUSTOM_SSH_KEY_HOSTS ]]; then
@@ -10,17 +11,16 @@ if [[ -f $ENV_DIR/CUSTOM_SSH_KEY && -f $ENV_DIR/CUSTOM_SSH_KEY_HOSTS ]]; then
   echo "" >&1
 
   # Ensure we have an ssh folder
-  if [ ! -d ~/.ssh ]; then
-    mkdir -p ~/.ssh
-    chmod 700 ~/.ssh
+  if [ ! -d $BUILD_DIR/.ssh ]; then
+      ln -s "$BUILD_DIR/.ssh" "$HOME/.ssh"
   fi
 
   # Load the private key into custom_key file.
-  base64 --decode $ENV_DIR/CUSTOM_SSH_KEY > ~/.ssh/custom_key
+  base64 --decode $ENV_DIR/CUSTOM_SSH_KEY > $HOME/.ssh/custom_key
 
   # Change the permissions on the file to
   # be read-only for this user.
-  chmod 400 ~/.ssh/custom_key
+  chmod 400 $HOME/.ssh/custom_key
 
   # Split $CUSTOM_SSH_KEY_HOSTS
   IFS=',' ;for element in `cat $ENV_DIR/CUSTOM_SSH_KEY_HOSTS`;
@@ -35,9 +35,9 @@ if [[ -f $ENV_DIR/CUSTOM_SSH_KEY && -f $ENV_DIR/CUSTOM_SSH_KEY_HOSTS ]]; then
   done
 
   eval $(ssh-agent -s)
-  ssh-add ~/.ssh/custom_key
+  ssh-add $HOME/.ssh/custom_key
   ssh-add -L
-  cat ~/.ssh/config
+  cat $HOME/.ssh/config
 
   ssh -oStrictHostKeyChecking=no -T git@github.com 2>&1
 
