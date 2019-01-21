@@ -16,7 +16,7 @@ if [[ -f $ENV_DIR/CUSTOM_SSH_KEY && -f $ENV_DIR/CUSTOM_SSH_KEY_HOSTS ]]; then
       chmod 700 $HOME/.ssh
   fi
 
-  # Symlink to the build machine
+  # Symlink to the build directory
   if [ ! -d $BUILD_DIR/.ssh ]; then
       ln -s "$BUILD_DIR/.ssh" "$HOME/.ssh"
   fi
@@ -39,6 +39,8 @@ if [[ -f $ENV_DIR/CUSTOM_SSH_KEY && -f $ENV_DIR/CUSTOM_SSH_KEY_HOSTS ]]; then
             "  AddKeysToAgent yes\n"\
             >> ~/.ssh/config
   done
+
+  chmod 400 $HOME/.ssh/config
 
   eval $(ssh-agent -s)
   ssh-add $HOME/.ssh/custom_key
